@@ -1,0 +1,53 @@
+﻿<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/LoginStyle.css" rel="stylesheet" />
+
+@model CustomerRegisterViewModel
+
+@using (Html.BeginForm("registration", "account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <section id="login">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+                    <h1><a href="/">Bamigroup.ge</a> რეგისტრაცია</h1>
+                    @if (ViewBag.errorMsg != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.errorMsg
+                        </div>
+                    }
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.FullName, new { id = "fullName", placeholder = "დასახელება", autofocus = true, @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.Email, new { id = "email", placeholder = "ელ. ფოსტა", @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.Phone, new { id = "phone", placeholder = "ტელეფონი", @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.PasswordFor(m => m.Password, new { id = "password", placeholder = "პაროლი", @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.PasswordFor(m => m.RepeatedPassword, new { id = "repeatedPassword", placeholder = "გაიმეორეთ პაროლი", @class = "form-control" })
+                    </div>
+                    <input type="submit" id="btn-login" class="btn btn-custom btn-lg btn-block" value="რეგისტრაცია">
+                    <a href="/account/login" class="forget" data-toggle="modal" data-target=".forget-modal">სისტემაში შესვლა</a>
+                    <hr />
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <p>Page &copy; @DateTime.Now.Year</p>
+                <p>Powered by <strong><a href="/">Bamigroup.ge</a></strong></p>
+            </div>
+        </div>
+    </div>
+</footer>

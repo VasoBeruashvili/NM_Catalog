@@ -1,0 +1,61 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<script src="~/Scripts/angular/client.shopping-cart.controller.js"></script>
+
+<div class="row" ng-controller="shoppingCartController">
+    <div class="col-sm-12 col-md-10 col-md-offset-1">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>დასახელება</th>
+                    <th>რაოდენობა</th>
+                    <th class="text-center">ფასი</th>
+                    <th class="text-center">ჯამი</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="ci in cartItems">
+                    <td class="col-md-6">
+                        <div class="media">
+                            <a ng-if="ci.productImage !== null && ci.productImage !== ''" class="thumbnail pull-left catalog-product-image" ng-click="openFancyBox(ci.productImage, ci.name)"> <img ng-src="{{ci.productImage}}" width="72" /></a>
+                            <a ng-if="ci.productImage === null || ci.productImage === ''" class="thumbnail pull-left"> <img src="~/Content/Resources/no_image.jpg" width="72" /></a>
+                            <div class="media-body">
+                                <h4 class="media-heading"><a>{{ci.name}}</a></h4>
+                                <p class="text-warning"><small class="comment more">{{ci.description}}</small></p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="col-md-1" style="text-align: center">
+                        <input type="number" class="form-control input-sm" ng-model="ci.quantityToAdd" ng-change="changeCartProductQuantity($index)">
+                    </td>
+                    <td class="col-md-1 text-center"><strong>{{ci.price | number: 2}} <i class="lari lari-normal"></i></strong></td>
+                    <td class="col-md-1 text-center"><strong>{{ci.sum | number: 2}} <i class="lari lari-normal"></i></strong></td>
+                    <td class="col-md-1">
+                        <a class="btn btn-sm btn-danger" ng-click="removeFromCart(ci.id)">
+                            <i class="fa fa-remove"></i> წაშლა
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>   </td>
+                    <td>   </td>
+                    <td>   </td>
+                    <td><h4>სულ ჯამი</h4></td>
+                    <td class="text-right"><h3><strong>{{totalSum | number: 2}} <i class="lari lari-normal"></i></strong></h3></td>
+                </tr>
+                <tr ng-show="cartItems.length > 0">
+                    <td>   </td>
+                    <td>   </td>
+                    <td>   </td>
+                    <td>   </td>
+                    <td>
+                        <a class="btn btn-success" ng-click="sendOrderToEmail()">
+                            შეკვეთის გაგზავნა <i class="fa fa-play"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

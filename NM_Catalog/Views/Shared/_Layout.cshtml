@@ -1,0 +1,106 @@
+﻿@{ 
+    CustomerLoginViewModel currentUser = (Session["CurrentUser"] as CustomerLoginViewModel);
+}
+
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bamigroup.ge - კატალოგი</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/font-larisome.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    <link href="~/Scripts/slick/slick.css" rel="stylesheet" />
+    <link href="~/Scripts/slick/slick-theme.css" rel="stylesheet" />
+
+    <link href="~/Scripts/fancybox-2.1.7/source/jquery.fancybox.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/slick/slick.min.js"></script>
+    <script src="~/Scripts/slick-starter.js"></script>
+
+    <script src="~/Scripts/fancybox-2.1.7/source/jquery.fancybox.js"></script>
+
+    <script src="~/Scripts/jquery.shorten.1.0.js"></script>
+
+    <script src="~/Scripts/custom-functions.js"></script>
+    <script src="~/Scripts/angular/angular.min.js"></script>
+    <script src="~/Scripts/angular/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <script src="~/Scripts/angular/app.js"></script>
+</head>
+<body ng-controller="globalController">
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="@Url.Action("index", "main")">
+                    <img style="margin-top: -15px; margin-bottom: -15px;" width="50" src="~/Content/Resources/logo.jpg" />
+                </a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                @{
+                    List<CategoryViewModel> categories = CategoriesRepository.GetCategories();
+                }
+                <ul class="nav navbar-nav">
+                    <li class="@Html.IsSelected("main", "index", "active")"><a href="@Url.Action("index", "main")"><i class="fa fa-home"></i> მთავარი</a></li>
+                    @foreach (CategoryViewModel c in categories)
+                    {
+                        <li class="@Html.IsSelected("products", $"category/{c.Id}", "active")"><a href="@Url.Action($"category/{c.Id}", "products")"><i class="fa @c.FontawesomeIcon"></i> @c.Name</a></li>
+                    }
+                    <li class="@Html.IsSelected("products", "shoppingcart", "active")"><a href="@Url.Action("shoppingcart", "products")"><i class="fa fa-shopping-cart"></i> კალათა <span id="cartItemsCount" ng-show="cartItemsCount > 0" class="badge badge-info">{{cartItemsCount}}</span></a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (currentUser == null)
+                    {
+                        <li><a href="@Url.Action("login", "account")"><i class="fa fa-sign-in"></i> შესვლა</a></li>
+                    }
+                    else
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@currentUser.FullName <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/account/logout"><i class="fa fa-sign-out"></i> გამოსვლა</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        <div id="spinner">
+            <img id="spinner-image" src="~/Content/Resources/spinner.gif" alt="Loading..." />
+        </div>
+        @RenderBody()
+    </div>
+    <footer class="container-fluid text-center">
+        <div class="copyrights">
+            <p>
+                <a href="/">Bamigroup.ge</a> &copy; @DateTime.Now.Year
+                <br>
+                <span><i class="fa fa-mobile"></i> მობილური: +995 574 09 01 99</span>
+                <br>
+                <span><i class="fa fa-mobile"></i> მობილური: +995 574 09 02 03</span>
+                <br>
+                <span><i class="fa fa-phone"></i> ტელეფონი: 0322 477 699</span>
+                <br>
+                <span><i class="fa fa-envelope"></i> ელ-ფოსტა: <a href="mailto:info@bamigroup.ge">info@bamigroup.ge</a></span>
+                <br>
+                <span><i class="fa fa-location-arrow"></i> მისამართი: ყიფშიძის 7. ბინა #2</span>
+            </p>
+            <p><a href="https://www.facebook.com/irakli.baramidze.73" target="_blank"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a></p>
+        </div>
+    </footer>
+</body>
+</html>

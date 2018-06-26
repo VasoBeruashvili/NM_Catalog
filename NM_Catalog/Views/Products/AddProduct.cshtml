@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bamigroup.ge - პროდუქტის დამატება</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/font-larisome.min.css" rel="stylesheet" />
+    <link href="~/Scripts/fancybox-2.1.7/source/jquery.fancybox.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/fancybox-2.1.7/source/jquery.fancybox.js"></script>
+
+    <script src="~/Scripts/custom-functions.js"></script>
+    <script src="~/Scripts/angular/angular.min.js"></script>
+    <script src="~/Scripts/angular/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <script src="~/Scripts/angular/app.js"></script>
+    <script src="~/Scripts/angular/admin.products.controller.js"></script>
+</head>
+<body ng-controller="adminProductsController">
+    <div class="container body-content">
+        <div id="spinner">
+            <img id="spinner-image" src="~/Content/Resources/spinner.gif" alt="Loading..." />
+        </div>
+        
+        <div class="container" style="padding-top: 30px; padding-bottom: 20px;">
+            <div class="col-md-3">
+                <center><a href="/"><h4><i class="fa fa-home"></i> Bamigroup.ge</h4></a></center>
+                <br />
+
+                <h4>კატეგორიები</h4>
+                <div class="list-group">
+                    <a href="" ng-repeat="c in categories" ng-click="getSubCategories(c.id)" class="list-group-item {{c.activeClass}}"><i class="fa {{c.fontawesomeIcon}}"></i> {{c.name}}</a>
+                </div>
+                <br />
+                <h4>ქვე-კატეგორიები</h4>
+                <div class="form-inline" style="margin-bottom: 10px;">
+                    <input style="width: 83%;" class="form-control" ng-model="subCatName" />
+                    <a class="btn btn-success" ng-click="saveSubCat()"><i class="fa fa-save"></i></a>
+                </div>
+                <div class="list-group">
+                    <a href="" ng-repeat="sc in subCategories" ng-click="getProducts(sc.id)" class="list-group-item {{sc.activeClass}}">{{sc.name}} <i ng-click="deleteSubCat($index)" style="color: red;" class="fa fa-close pull-right"></i></a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div style="margin-bottom: 60px; height: 345px; border: 1px solid #aaaaaa; background-color: #fff; padding: 0 15px 15px 15px; border-radius: 5px;">
+                    <input ng-hide="true" id="inputFileToLoad" type="file" accept="image/*" onchange="loadImageToBase64DataURL();" />
+                    <h4 style="margin-top: 20px;">პროდუქტის დამატება</h4>
+                    <a class="btn btn-danger" href="/Account/Logout" style="float: right; margin-top: -35px;"><i class="fa fa-sign-out"></i> გასვლა</a>
+                    <hr />
+                    <div class="col-md-3">
+                        <img id="productImage" width="150" height="150" src="" style="margin-bottom: 8px; border: 1px solid #b7b5b5;" />
+                        <br />
+                        <a class="btn btn-default" ng-click="openImageUpload()"><i class="fa fa-image"></i> სურათი</a>
+                    </div>   
+                    <div class="col-md-9">
+                        <input ng-model="name" type="text" class="form-control" placeholder="დასახელება" />
+                        <textarea ng-model="description" class="form-control" rows="5" style="resize: vertical; margin-top: 10px; margin-bottom: 8px;" placeholder="აღწერა..."></textarea>
+                        <input ng-model="price" type="number" style="width: 200px;" class="form-control" placeholder="ღირებულება" />
+                        <a class="btn btn-primary" style="margin-top: 15px;" ng-click="saveProduct()"><i class="fa fa-save"></i> შენახვა</a>
+                    </div>
+                </div>
+
+                @*<ul ng-show="products.length > 0" uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>*@
+
+                <div id="product" ng-repeat="product in products" style="border: 1px solid #aaaaaa; border-radius: 5px; width: 100%; margin-bottom: 20px; padding: 10px; background-color: #fff;">
+                    <span style="margin-bottom: 15px;">{{product.name}}</span>
+                    <a class="btn btn-danger" style="float: right; width: 130px;" ng-click="deleteProduct(product.id)"><i class="fa fa-trash"></i> წაშლა</a>
+                    <a class="btn btn-warning" href="#toScrollFocus" style="float: right; margin-right: 10px; width: 130px;" ng-click="editProduct(product)"><i class="fa fa-pencil"></i> რედაქტირება</a>
+                    <p>
+                        <a ng-if="product.productImage !== null && product.productImage !== ''" class="pull-left catalog-product-image" ng-click="openFancyBox(product.productImage, product.name)">
+                            <img style="border: 1px solid #b7b5b5; margin-right: 10px;" width="60" height="60" src="{{product.productImage}}" />
+                        </a>
+                        <a ng-if="product.productImage === null || product.productImage === ''" class="pull-left">
+                            <img style="border: 1px solid #b7b5b5; margin-right: 10px;" width="60" height="60" src="~/Content/Resources/no_image.jpg">
+                        </a>
+                    </p>
+                    <p>
+                        <b>აღწერა:</b> {{product.description}}
+                    </p>
+                    <p style="text-align: right; margin-top: 15px;">
+                        <b>ფასი:</b> {{product.price}} ლარი
+                    </p>
+                </div>
+
+                @*<ul ng-show="products.length > 0" uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>*@
+            </div>
+        </div>
+    </div>
+</body>
+</html>

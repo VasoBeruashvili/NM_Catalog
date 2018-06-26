@@ -1,0 +1,37 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<div id="main-banner" class="container">
+    <center>
+        <img src="~/Content/Resources/Used-Parts-Banner.jpg" height="265" />
+    </center>
+</div>
+
+@{
+    List<ProductViewModel> newlyAddedProducts = ProductsRepository.GetNewlyAddedProducts();
+}
+
+<div id="newly-added-products" class="container">
+    @foreach (ProductViewModel nap in ProductsRepository.GetNewlyAddedProducts())
+    {
+        <div class="slick-product-container">
+            @if (nap.ProductImage == null || nap.ProductImage == string.Empty)
+            {
+                <div class="product-image">
+                    <center>
+                        <img src="~/Content/Resources/no_image.jpg" height="178" />
+                        <p>@nap.Name</p>
+                    </center>
+                </div>
+            }
+            else
+            {
+                <div class="product-image">
+                    <center>
+                        <img src="@nap.ProductImage" height="178" />
+                        <p>@nap.Name</p>
+                    </center>
+                </div>
+            }
+        </div>
+    }
+</div>
